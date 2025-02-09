@@ -1,0 +1,34 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "ap-southeast-1"  # Change to your AWS region
+    REPOSITORY_URI: "448049800169.dkr.ecr.ap-southeast-1.amazonaws.com/my-app" # Change to your ECR repo URI
+
+phases:
+  pre_build:
+    commands:
+      - echo "Logging into Amazon ECR..."
+      - aws --version
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - echo "Setting image tag..."
+      - IMAGE_TAG=$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build --platform linux/amd64 -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo "Pushing Docker image to Amazon ECR..."
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo "Creating imagedefinitions.json for Elastic Beanstalk..."
+      - printf '[{"name":"my-app-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - cat imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
