@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     AWS_REGION: "ap-southeast-1"  # Change to your AWS region
-    REPOSITORY_URI: "448049800169.dkr.ecr.ap-southeast-1.amazonaws.com/my-app" # Change to your ECR repo URI
+    REPOSITORY_URI: "448049800169.dkr.ecr.ap-southeast-1.amazonaws.com/davidnguyen/beanstalk-demo" # Change to your ECR repo URI
 
 phases:
   pre_build:
