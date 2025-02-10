@@ -9,6 +9,7 @@ phases:
   pre_build:
     commands:
       - echo "Logging into Amazon ECR..."
+      - ls -lah
       - aws --version
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
       - echo "Setting image tag..."
