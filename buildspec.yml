@@ -9,8 +9,6 @@ phases:
   pre_build:
     commands:
       - echo "Logging into Amazon ECR..."
-      - echo "CodeBuild source directory: $CODEBUILD_SRC_DIR"
-      - ls -R $CODEBUILD_SRC_DIR  # List files in the directory
       - aws --version
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
       - echo "Setting image tag..."
