@@ -4,12 +4,14 @@ env:
   variables:
     AWS_REGION: "ap-southeast-1"  # Change to your AWS region
     REPOSITORY_URI: "448049800169.dkr.ecr.ap-southeast-1.amazonaws.com/davidnguyen/beanstalk-demo" # Change to your ECR repo URI
+    CODEBUILD_SRC_DIR: .
 
 phases:
   pre_build:
     commands:
       - echo "Logging into Amazon ECR..."
-      - ls -lah
+      - echo "CodeBuild source directory: $CODEBUILD_SRC_DIR"
+      - ls -R $CODEBUILD_SRC_DIR  # List files in the directory
       - aws --version
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
       - echo "Setting image tag..."
@@ -18,6 +20,7 @@ phases:
   build:
     commands:
       - echo "Building Docker image..."
+      - cd $CODEBUILD_SRC_DIR
       - docker build --platform linux/amd64 -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
 
