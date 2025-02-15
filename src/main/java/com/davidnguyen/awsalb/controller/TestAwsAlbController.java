@@ -22,9 +22,14 @@ public class TestAwsAlbController {
                 .username("user_02")
                 .email("user_02@gmail.com")
                 .build();
+        User user3 = User.builder()
+                .username("user_03")
+                .email("user_03@gmail.com")
+                .build();
         List<User> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
+        users.add(user3);
         return ResponseEntity.ok(users);
     }
 }
