@@ -1,7 +1,7 @@
 package com.example.demo;
 
 /**
- * A simple Java class representing a User.
+ * A simple Java class representing a User test
  */
 public class User {
     // Fields (attributes)
